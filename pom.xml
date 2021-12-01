@@ -18,6 +18,7 @@
         <module>im-sync</module>
         <module>im-core</module>
         <module>im-auth</module>
+        <module>im-route</module>
     </modules>
     <packaging>pom</packaging>
     <properties>
