@@ -17,6 +17,7 @@
         <module>im-filter</module>
         <module>im-sync</module>
         <module>im-core</module>
+        <module>im-auth</module>
     </modules>
     <packaging>pom</packaging>
     <properties>

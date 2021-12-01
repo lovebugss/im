@@ -1,4 +1,4 @@
-package com.itrjp.im.server;
+package com.itrjp.im.server.message;
 
 /**
  * 消息载体

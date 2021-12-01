@@ -1,6 +1,6 @@
 package com.itrjp.im.server.converter;
 
-import com.itrjp.im.server.MessagePayload;
+import com.itrjp.im.server.message.MessagePayload;
 
 /**
  * 消息转换器
