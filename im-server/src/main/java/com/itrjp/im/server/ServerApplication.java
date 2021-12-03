@@ -1,6 +1,7 @@
 package com.itrjp.im.server;
 
 import com.corundumstudio.socketio.SocketIOServer;
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -13,7 +14,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author renjp
  */
 @SpringBootApplication
-public class ServerApplication implements CommandLineRunner {
+public class ServerApplication implements CommandLineRunner, DisposableBean {
     private final SocketIOServer server;
 
     public ServerApplication(SocketIOServer server) {
@@ -26,6 +27,13 @@ public class ServerApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+        System.out.println("server run...");
         server.start();
+    }
+
+    @Override
+    public void destroy() throws Exception {
+        System.out.println("server stop...");
+        server.stop();
     }
 }

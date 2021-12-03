@@ -19,6 +19,6 @@ public class AuthListener implements AuthorizationListener {
     @Override
     public boolean isAuthorized(HandshakeData data) {
 
-        return false;
+        return true;
     }
 }

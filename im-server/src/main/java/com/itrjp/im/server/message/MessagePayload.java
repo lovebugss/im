@@ -6,5 +6,7 @@ package com.itrjp.im.server.message;
  * @author renjp
  * @date 2021/12/1 17:16
  */
-public interface MessagePayload {
+public interface MessagePayload<T> {
+
+    T getMessage();
 }
