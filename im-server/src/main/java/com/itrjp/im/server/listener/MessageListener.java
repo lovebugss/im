@@ -1,9 +1,7 @@
 package com.itrjp.im.server.listener;
 
 import com.corundumstudio.socketio.*;
-import com.corundumstudio.socketio.annotation.OnConnect;
-import com.corundumstudio.socketio.annotation.OnDisconnect;
-import com.corundumstudio.socketio.annotation.OnEvent;
+import com.corundumstudio.socketio.listener.ClientListeners;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.itrjp.im.server.enums.EventEnum;
@@ -27,14 +25,12 @@ import java.util.UUID;
 public class MessageListener {
     private final AbstractMessageHandler<String> messageHandler;
     private final Cache<String, SocketIOClient> cache = CacheBuilder.newBuilder().build();
-    private final SocketIOServer socketIOServer;
+//    private final SocketIOServer socketIOServer;
 
-    public MessageListener(AbstractMessageHandler<String> messageHandler, SocketIOServer socketIOServer) {
+    public MessageListener(AbstractMessageHandler<String> messageHandler) {
         this.messageHandler = messageHandler;
-        this.socketIOServer = socketIOServer;
     }
 
-    @OnEvent("message")
     public void onData(SocketIOClient socketIOClient, Message message, AckRequest ackRequest) throws Exception {
         log.info("onData...");
         messageHandler.handler(message);
@@ -48,18 +44,10 @@ public class MessageListener {
         allClients.forEach((socketIOClient1 -> log.info("foreach: {}", socketIOClient1.getSessionId())));
 //        // 消息过滤
         BroadcastOperations broadcastOperations = namespace.getBroadcastOperations();
-//        socketIOServer.getBroadcastOperations().sendEvent(EventEnum.MESSAGE.getCode(), message);
-//
         broadcastOperations.sendEvent(EventEnum.MESSAGE.getCode(), message);
-//        cache.asMap().forEach((key, val) -> {
-//            if (val.isChannelOpen()) {
-//                val.sendEvent(EventEnum.MESSAGE.getCode(), message);
-//            }
-//        });
 
     }
 
-    @OnDisconnect
     public void onDisconnect(SocketIOClient socketIOClient) {
         log.info("onDisconnect...");
         String sessionId = socketIOClient.getSessionId().toString();
@@ -68,12 +56,11 @@ public class MessageListener {
         SocketIONamespace namespace = socketIOClient.getNamespace();
         HandshakeData handshakeData = socketIOClient.getHandshakeData();
         String room = handshakeData.getSingleUrlParam("room");
-        log.info("current namespace:{}, room: {}", namespace, room);
+        log.info("current namespace:{}, room: {}", namespace.getName(), room);
         socketIOClient.disconnect();
         cache.invalidate(sessionId);
     }
 
-    @OnConnect
     public void onConnect(SocketIOClient socketIOClient) {
         log.info("onConnect...");
         UUID sessionId = socketIOClient.getSessionId();
@@ -84,7 +71,16 @@ public class MessageListener {
         SocketIONamespace namespace = socketIOClient.getNamespace();
         HandshakeData handshakeData = socketIOClient.getHandshakeData();
         String room = handshakeData.getSingleUrlParam("room");
-        log.info("current namespace:{}, room: {}", namespace, room);
+        log.info("current namespace:{}, room: {}", namespace.getName(), room);
         socketIOClient.joinRoom(room);
+    }
+
+    public void registerEvent(ClientListeners namespace) {
+        // 连接
+        namespace.addConnectListener(this::onConnect);
+        // 断链
+        namespace.addDisconnectListener(this::onDisconnect);
+        // 消息
+        namespace.addEventListener(EventEnum.MESSAGE.getCode(), Message.class, this::onData);
     }
 }

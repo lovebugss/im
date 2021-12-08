@@ -5,6 +5,8 @@ import org.springframework.beans.factory.DisposableBean;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
 /**
  * 程序主入口
@@ -14,6 +16,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author renjp
  */
 @SpringBootApplication
+@EnableConfigurationProperties
+@ConfigurationPropertiesScan
 public class ServerApplication implements CommandLineRunner, DisposableBean {
     private final SocketIOServer server;
 
