@@ -22,7 +22,6 @@ public class RedissonConfigure {
     @Bean(destroyMethod = "shutdown")
     StoreFactory redissonStoreFactory(Config redissonConfig) {
         RedissonClient redisson = Redisson.create(redissonConfig);
-
         return new RedissonStoreFactory(redisson);
     }
 

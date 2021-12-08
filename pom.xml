@@ -19,6 +19,7 @@
         <module>im-core</module>
         <module>im-auth</module>
         <module>im-route</module>
+        <module>im-api</module>
     </modules>
     <packaging>pom</packaging>
     <properties>
@@ -70,7 +71,11 @@
                 <artifactId>protobuf-java-format</artifactId>
                 <version>1.4</version>
             </dependency>
-
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>30.1.1-jre</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 </project>
