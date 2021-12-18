@@ -1,0 +1,7 @@
+redisson:
+  address: redis://127.0.0.1:6379
+spring:
+  application:
+    name: im-connect
+server:
+  port: 18071

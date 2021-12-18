@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: im-api
+server:
+  port: 18081

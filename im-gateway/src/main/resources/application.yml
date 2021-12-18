@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: im-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: im_api_route
+          uri: lb://im-api
+          predicates:
+            - Path=/api/**
+          filters:
+            - RewritePath=/api/(?<segment>/?.*), /$\{segment}
+        - id: connect_route
+          uri: lb//im-connect
+          predicates:
+            - Path=/socket.io/**
+
+server:
+  port: 8888
