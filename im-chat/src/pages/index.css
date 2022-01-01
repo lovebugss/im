@@ -1,0 +1,23 @@
+.app {
+
+}
+
+.app-header {
+  padding: 10px;
+  background-color: #282c34;
+  color: white;
+}
+
+.app-header > div {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.chat {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  padding: 16px;
+}
