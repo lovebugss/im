@@ -11,9 +11,24 @@ spring:
           filters:
             - RewritePath=/api/(?<segment>/?.*), /$\{segment}
         - id: connect_route
-          uri: lb//im-connect
+          uri: lb:ws://im-connect
           predicates:
             - Path=/socket.io/**
+#          filters:
+#            - RewritePath=/socket.io/(?<segment>/?.*), /$\{segment}
+#            - StripPrefix=0
+#            - DedupeResponseHeader= Proxy-Authenticate Proxy-Authorization  Keep-Alive TE Trailer Transfer-Encoding
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods: "*"
+            allowedHeaders: "*"
 
+
+#    loadbalancer:
+#      ribbon:
+#        enabled: false
 server:
   port: 8888
+debug: true

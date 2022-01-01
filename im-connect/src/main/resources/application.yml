@@ -3,5 +3,11 @@ redisson:
 spring:
   application:
     name: im-connect
+
 server:
   port: 18071
+  address: 192.168.8.122
+debug: true
+im:
+  server:
+    reuse-address: true

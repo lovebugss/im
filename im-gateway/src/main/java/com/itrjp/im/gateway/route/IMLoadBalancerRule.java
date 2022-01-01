@@ -22,7 +22,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 
-@Component
+//@Component
 public class IMLoadBalancerRule extends AbstractLoadBalancerRule {
     private static final Logger LOGGER = LoggerFactory.getLogger(IMLoadBalancerRule.class);
     @Autowired

@@ -2,11 +2,13 @@ package com.itrjp.im.connect;
 
 import com.corundumstudio.socketio.SocketIOServer;
 import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 /**
  * 程序主入口
@@ -18,8 +20,11 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 @SpringBootApplication
 @EnableConfigurationProperties
 @ConfigurationPropertiesScan
+@EnableDiscoveryClient
 public class ConnectApplication implements CommandLineRunner, DisposableBean {
-    private final SocketIOServer server;
+    @Autowired
+    private SocketIOServer server;
+
 
     public ConnectApplication(SocketIOServer server) {
         this.server = server;
@@ -33,8 +38,6 @@ public class ConnectApplication implements CommandLineRunner, DisposableBean {
     public void run(String... args) throws Exception {
         System.out.println("server run...");
         server.start();
-
-        //
     }
 
     @Override

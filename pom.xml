@@ -14,6 +14,8 @@
         <module>im-auth</module>
         <module>im-route</module>
         <module>im-api</module>
+        <module>im-scheduler</module>
+        <module>im-common</module>
     </modules>
     <packaging>pom</packaging>
     <properties>
@@ -23,9 +25,9 @@
         <netty.version>4.1.65.Final</netty.version>
         <socket-io.version>1.7.19</socket-io.version>
         <redisson.version>3.16.1</redisson.version>
-        <spring-boot.version>2.3.7.RELEASE</spring-boot.version>
-        <spring-cloud-alibaba.version>2.2.2.RELEASE</spring-cloud-alibaba.version>
-        <spring-cloud.version>Hoxton.SR9</spring-cloud.version>
+        <spring-boot.version>2.3.12.RELEASE</spring-boot.version>
+        <spring-cloud-alibaba.version>2.2.7.RELEASE</spring-cloud-alibaba.version>
+        <spring-cloud.version>Hoxton.SR12</spring-cloud.version>
     </properties>
 
     <dependencyManagement>
@@ -63,7 +65,7 @@
             <dependency>
                 <groupId>io.netty</groupId>
                 <artifactId>netty-bom</artifactId>
-                <version>4.1.65.Final</version>
+                <version>${netty.version}</version>
                 <type>pom</type>
             </dependency>
 

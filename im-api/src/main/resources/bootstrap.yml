@@ -6,7 +6,7 @@ nacos:
 
 spring:
   application:
-    name: im-gateway
+    name: im-api
   cloud:
     nacos:
       discovery:
