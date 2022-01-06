@@ -13,7 +13,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.Map;
 
-@Component
+//@Component
 public class IMLoadBalancerClientFilter extends LoadBalancerClientFilter {
 
     public IMLoadBalancerClientFilter(LoadBalancerClient loadBalancer, LoadBalancerProperties properties) {
@@ -25,8 +25,9 @@ public class IMLoadBalancerClientFilter extends LoadBalancerClientFilter {
      * 实现转发到socketio集群，但是集群内socketio服务端口必须固定
      */
     protected ServiceInstance choose(ServerWebExchange exchange) {
+        System.out.println("IMLoadBalancerClientFilter#choose");
         ServiceInstance serviceInstance = super.choose(exchange);
-        if(null != serviceInstance && "socketio".equals(serviceInstance.getServiceId())
+        if(null != serviceInstance && "im-connect".equals(serviceInstance.getServiceId())
                 && exchange.getRequest().getPath().toString().contains("/socket.io/")) {
             Map<String, String> metadata = serviceInstance.getMetadata();
             String socketioPort = metadata.get("socketio-port");

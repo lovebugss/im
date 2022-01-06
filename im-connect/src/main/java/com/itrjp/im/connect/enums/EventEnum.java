@@ -1,8 +1,11 @@
 package com.itrjp.im.connect.enums;
 
+import java.util.Locale;
+
 public enum EventEnum {
-    MESSAGE("message");
-    private String code;
+    MESSAGE("message"),
+    NOTICE("notice");
+    private final String code;
 
     EventEnum(String code) {
         this.code = code;
@@ -12,7 +15,8 @@ public enum EventEnum {
         return code;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    @Override
+    public String toString() {
+        return this.getCode().toLowerCase(Locale.ROOT);
     }
 }

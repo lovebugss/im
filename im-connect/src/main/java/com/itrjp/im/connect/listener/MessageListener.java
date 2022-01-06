@@ -1,7 +1,6 @@
 package com.itrjp.im.connect.listener;
 
 import com.corundumstudio.socketio.*;
-import com.corundumstudio.socketio.listener.ClientListeners;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.itrjp.im.connect.enums.EventEnum;
@@ -24,7 +23,8 @@ import java.util.UUID;
 @Component
 public class MessageListener {
     private final AbstractMessageHandler<String> messageHandler;
-    private final Cache<String, SocketIOClient> cache = CacheBuilder.newBuilder().build();
+    private final Cache<UUID, SocketIOClient> cache = CacheBuilder.newBuilder().build();
+
 //    private final SocketIOServer socketIOServer;
 
     public MessageListener(AbstractMessageHandler<String> messageHandler) {
@@ -44,13 +44,13 @@ public class MessageListener {
         allClients.forEach((socketIOClient1 -> log.info("foreach: {}", socketIOClient1.getSessionId())));
 //        // 消息过滤
         BroadcastOperations broadcastOperations = namespace.getBroadcastOperations();
-        broadcastOperations.sendEvent(EventEnum.MESSAGE.getCode(), message);
+        broadcastOperations.sendEvent(EventEnum.MESSAGE.toString(), message);
 
     }
 
     public void onDisconnect(SocketIOClient socketIOClient) {
         log.info("onDisconnect...");
-        String sessionId = socketIOClient.getSessionId().toString();
+        UUID sessionId = socketIOClient.getSessionId();
         log.info("onDisconnect, client: {}", sessionId);
         // 检查命名空间/房间是否存在
         SocketIONamespace namespace = socketIOClient.getNamespace();
@@ -67,16 +67,17 @@ public class MessageListener {
         log.info("onConnect, client: {}", sessionId);
         // 检查命名空间/房间是否存在
 
-        cache.put(sessionId.toString(), socketIOClient);
+        cache.put(sessionId, socketIOClient);
         SocketIONamespace namespace = socketIOClient.getNamespace();
         HandshakeData handshakeData = socketIOClient.getHandshakeData();
         String room = handshakeData.getSingleUrlParam("room");
+        String userId = handshakeData.getSingleUrlParam("userId");
         log.info("current namespace:{}, room: {}", namespace.getName(), room);
-        socketIOClient.joinRoom(room);
-        socketIOClient.sendEvent("list", new String[]{"zhangsan", "lisi"});
+        namespace.getBroadcastOperations().sendEvent(EventEnum.NOTICE.getCode(), userId);
     }
 
-    public void registerEvent(ClientListeners namespace) {
+    public void registerEvent(SocketIONamespace namespace) {
+        log.info("register event, namespace:{}", namespace.getName());
         // 连接
         namespace.addConnectListener(this::onConnect);
         // 断链

@@ -30,6 +30,7 @@ public class NameSpaceHandler {
             return Optional.empty();
         }
         SocketIONamespace socketIONamespace = ioServer.getNamespace(namespace);
+        // TODO 多线程问题,
         if (socketIONamespace == null) {
             socketIONamespace = ioServer.addNamespace(namespace);
             // 注册消息处理事件

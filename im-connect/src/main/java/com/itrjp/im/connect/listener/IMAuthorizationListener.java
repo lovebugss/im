@@ -41,8 +41,10 @@ public class IMAuthorizationListener implements AuthorizationListener {
         log.info("url params: {}", urlParams);
         String room = data.getSingleUrlParam("room");
         String channel = data.getSingleUrlParam("channel");
+        String userId = data.getSingleUrlParam("userId");
 
-        if (room == null || channel == null) {
+        // 先做一个简单的校验
+        if (room == null || channel == null || userId == null) {
             return false;
         }
         if (!nameSpaceCache.hasKey(channel)) {

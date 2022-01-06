@@ -8,12 +8,12 @@ public class IMServerProperties {
     /**
      * host
      */
-    @Value("${im.server.host:${server.host:}}")
+    @Value("${im.server.host:${server.address}}")
     private String host;
     /**
      * port
      */
-    @Value("${im.server.port:${server.port:}}")
+    @Value("${im.server.port:${server.port:18001}}")
     private int port;
     private boolean reuseAddress = false;
 

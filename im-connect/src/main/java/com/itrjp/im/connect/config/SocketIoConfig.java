@@ -29,7 +29,7 @@ public class SocketIoConfig {
         com.corundumstudio.socketio.Configuration configuration = new com.corundumstudio.socketio.Configuration();
         configuration.setHostname(serverProperties.getHost());
         configuration.setPort(serverProperties.getPort());
-        configuration.setOrigin("http://localhost:8000");
+//        configuration.setOrigin("http://localhost:8000");
         // 设置store
         configuration.setStoreFactory(storeFactory);
         // 设置鉴权监听器

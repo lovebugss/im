@@ -10,6 +10,7 @@ spring:
             - Path=/api/**
           filters:
             - RewritePath=/api/(?<segment>/?.*), /$\{segment}
+
         - id: connect_route
           uri: lb:ws://im-connect
           predicates:
