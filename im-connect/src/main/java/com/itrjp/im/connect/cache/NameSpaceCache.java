@@ -3,6 +3,8 @@ package com.itrjp.im.connect.cache;
 import com.corundumstudio.socketio.SocketIONamespace;
 import com.google.common.cache.CacheBuilder;
 
+import java.util.function.Function;
+
 /**
  * SocketIONamespace 缓存类
  *
@@ -40,5 +42,10 @@ public class NameSpaceCache implements Cache<String, SocketIONamespace> {
     @Override
     public void remove(String key) {
         cache.invalidate(key);
+    }
+
+    @Override
+    public void putIfAbsent(String channel, Function<String, SocketIONamespace> function) {
+        cache.asMap().computeIfAbsent(channel, function);
     }
 }

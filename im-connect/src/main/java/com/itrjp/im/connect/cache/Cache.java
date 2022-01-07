@@ -1,5 +1,9 @@
 package com.itrjp.im.connect.cache;
 
+import com.corundumstudio.socketio.SocketIONamespace;
+
+import java.util.function.Function;
+
 public interface Cache<K, V> {
     V get(K key);
 
@@ -8,4 +12,6 @@ public interface Cache<K, V> {
     boolean hasKey(K key);
 
     void remove(K key);
+
+    void putIfAbsent(String channel, Function<String, SocketIONamespace> function);
 }

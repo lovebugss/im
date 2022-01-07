@@ -25,8 +25,6 @@ public class MessageListener {
     private final AbstractMessageHandler<String> messageHandler;
     private final Cache<UUID, SocketIOClient> cache = CacheBuilder.newBuilder().build();
 
-//    private final SocketIOServer socketIOServer;
-
     public MessageListener(AbstractMessageHandler<String> messageHandler) {
         this.messageHandler = messageHandler;
     }
@@ -74,15 +72,5 @@ public class MessageListener {
         String userId = handshakeData.getSingleUrlParam("userId");
         log.info("current namespace:{}, room: {}", namespace.getName(), room);
         namespace.getBroadcastOperations().sendEvent(EventEnum.NOTICE.getCode(), userId);
-    }
-
-    public void registerEvent(SocketIONamespace namespace) {
-        log.info("register event, namespace:{}", namespace.getName());
-        // 连接
-        namespace.addConnectListener(this::onConnect);
-        // 断链
-        namespace.addDisconnectListener(this::onDisconnect);
-        // 消息
-        namespace.addEventListener(EventEnum.MESSAGE.getCode(), Message.class, this::onData);
     }
 }

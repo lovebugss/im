@@ -2,15 +2,12 @@ package com.itrjp.im.connect.listener;
 
 import com.corundumstudio.socketio.AuthorizationListener;
 import com.corundumstudio.socketio.HandshakeData;
-import com.corundumstudio.socketio.SocketIONamespace;
-import com.itrjp.im.connect.cache.NameSpaceCache;
 import com.itrjp.im.connect.handler.NameSpaceHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * 鉴权监听器
@@ -21,7 +18,6 @@ import java.util.Optional;
 @Slf4j
 @Component
 public class IMAuthorizationListener implements AuthorizationListener {
-    private final NameSpaceCache nameSpaceCache = NameSpaceCache.getInstance();
     private final NameSpaceHandler nameSpaceHandler;
 
     public IMAuthorizationListener(NameSpaceHandler nameSpaceHandler) {
@@ -47,10 +43,8 @@ public class IMAuthorizationListener implements AuthorizationListener {
         if (room == null || channel == null || userId == null) {
             return false;
         }
-        if (!nameSpaceCache.hasKey(channel)) {
-            createNameSpace(channel);
-        }
-        // 初始化
+        // 创建频道
+        createNameSpace(channel);
         return true;
     }
 
@@ -60,12 +54,6 @@ public class IMAuthorizationListener implements AuthorizationListener {
      * @param channel
      */
     public void createNameSpace(String channel) {
-        // 创建SocketIONamespace
-        Optional<SocketIONamespace> namespaceOptional = nameSpaceHandler.create(channel);
-        namespaceOptional.ifPresent(namespace -> {
-            // 放入缓存
-            nameSpaceCache.set(channel, namespace);
-        });
-
+        nameSpaceHandler.create(channel);
     }
 }

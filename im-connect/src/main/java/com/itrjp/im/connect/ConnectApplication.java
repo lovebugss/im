@@ -1,9 +1,5 @@
 package com.itrjp.im.connect;
 
-import com.corundumstudio.socketio.SocketIOServer;
-import org.springframework.beans.factory.DisposableBean;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
@@ -21,28 +17,9 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 @EnableConfigurationProperties
 @ConfigurationPropertiesScan
 @EnableDiscoveryClient
-public class ConnectApplication implements CommandLineRunner, DisposableBean {
-    @Autowired
-    private SocketIOServer server;
-
-
-    public ConnectApplication(SocketIOServer server) {
-        this.server = server;
-    }
+public class ConnectApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(ConnectApplication.class, args);
-    }
-
-    @Override
-    public void run(String... args) throws Exception {
-        System.out.println("server run...");
-        server.start();
-    }
-
-    @Override
-    public void destroy() throws Exception {
-        System.out.println("server stop...");
-        server.stop();
     }
 }
