@@ -24,6 +24,14 @@ public class NameSpaceHandler {
     private final MessageListener messageListener;
     private final NameSpaceCache nameSpaceCache = NameSpaceCache.getInstance();
 
+    /**
+     * 创建, 如果不存在
+     *
+     * @param channel
+     */
+    public void create(String channel) {
+        nameSpaceCache.putIfAbsent(channel, this::doCreate);
+    }
 
     /**
      * 创建
@@ -58,14 +66,5 @@ public class NameSpaceHandler {
         namespace.addDisconnectListener(messageListener::onDisconnect);
         // 消息
         namespace.addEventListener(EventEnum.MESSAGE.getCode(), Message.class, messageListener::onData);
-    }
-
-    /**
-     * 创建, 如果不存在
-     *
-     * @param channel
-     */
-    public void create(String channel) {
-        nameSpaceCache.putIfAbsent(channel, this::doCreate);
     }
 }

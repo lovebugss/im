@@ -46,6 +46,11 @@ public class MessageListener {
 
     }
 
+    /**
+     * 下线
+     *
+     * @param socketIOClient
+     */
     public void onDisconnect(SocketIOClient socketIOClient) {
         log.info("onDisconnect...");
         UUID sessionId = socketIOClient.getSessionId();
@@ -59,6 +64,11 @@ public class MessageListener {
         cache.invalidate(sessionId);
     }
 
+    /**
+     * 上线
+     *
+     * @param socketIOClient
+     */
     public void onConnect(SocketIOClient socketIOClient) {
         log.info("onConnect...");
         UUID sessionId = socketIOClient.getSessionId();

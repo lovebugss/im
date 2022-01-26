@@ -1,21 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.3.12.RELEASE</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>    <modelVersion>4.0.0</modelVersion>
     <groupId>com.itrjp</groupId>
     <artifactId>im</artifactId>
     <version>1.0-SNAPSHOT</version>
     <modules>
-        <module>im-connect</module>
-        <module>im-gateway</module>
-        <module>im-filter</module>
-        <module>im-sync</module>
-        <module>im-core</module>
         <module>im-auth</module>
-        <module>im-route</module>
         <module>im-api</module>
-        <module>im-scheduler</module>
+        <module>im-connect</module>
         <module>im-common</module>
+        <module>im-core</module>
+        <module>im-filter</module>
+        <module>im-gateway</module>
+        <module>im-sync</module>
     </modules>
     <packaging>pom</packaging>
     <properties>
@@ -28,6 +31,7 @@
         <spring-boot.version>2.3.12.RELEASE</spring-boot.version>
         <spring-cloud-alibaba.version>2.2.7.RELEASE</spring-cloud-alibaba.version>
         <spring-cloud.version>Hoxton.SR12</spring-cloud.version>
+        <jackson.version>2.11.4</jackson.version>
     </properties>
 
     <dependencyManagement>
@@ -97,6 +101,12 @@
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
                 <version>30.1.1-jre</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${jackson.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

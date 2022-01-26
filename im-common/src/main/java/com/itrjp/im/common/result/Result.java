@@ -11,23 +11,29 @@ public class Result<T> {
     private Result(int code, String message, T data) {
         this.code = code;
         this.msg = message;
+    }
+
+    private Result(ErrorCode errorCode, T data) {
+        this.code = errorCode.getCode();
+        this.msg = errorCode.getMessage();
         this.data = data;
     }
 
     public static <T> Result<T> success(T data) {
-        return new Result<>(200, "success", data);
+        return new Result<>(ErrorCode.SUCCESS, data);
     }
 
     public static <T> Result<T> error() {
-        return new Result<>(0, "error", null);
+        return new Result<>(ErrorCode.ERROR, null);
     }
 
-    public static <T> Result<T> error(int code, String message) {
-        return new Result<>(code, message, null);
-    }
 
     public static <T> Result<T> error(BizException exception) {
         return new Result<>(exception.getCode(), exception.getMsg(), null);
+    }
+
+    public static <T> Result<T> error(ErrorCode errorCode) {
+        return new Result<>(errorCode.getCode(), errorCode.getMessage(), null);
     }
 
 

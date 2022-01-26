@@ -53,7 +53,7 @@ public class IMAuthorizationListener implements AuthorizationListener {
      *
      * @param channel
      */
-    public void createNameSpace(String channel) {
+    private void createNameSpace(String channel) {
         nameSpaceHandler.create(channel);
     }
 }

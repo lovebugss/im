@@ -25,13 +25,13 @@ public class SocketIoConfig {
 
 
     @Bean
-    SocketIOServer socketIOServer(StoreFactory storeFactory, SocketConfig socketConfig) {
+    SocketIOServer socketIOServer(SocketConfig socketConfig) {
         com.corundumstudio.socketio.Configuration configuration = new com.corundumstudio.socketio.Configuration();
         configuration.setHostname(serverProperties.getHost());
         configuration.setPort(serverProperties.getPort());
 //        configuration.setOrigin("http://localhost:8000");
         // 设置store
-        configuration.setStoreFactory(storeFactory);
+//        configuration.setStoreFactory(storeFactory);
         // 设置鉴权监听器
         configuration.setAuthorizationListener(authorizationListener);
         configuration.setSocketConfig(socketConfig);
