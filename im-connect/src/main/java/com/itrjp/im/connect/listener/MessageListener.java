@@ -6,6 +6,7 @@ import com.google.common.cache.CacheBuilder;
 import com.itrjp.im.connect.enums.EventEnum;
 import com.itrjp.im.connect.handler.AbstractMessageHandler;
 import com.itrjp.im.connect.message.Message;
+import com.itrjp.im.connect.service.ChannelService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -22,10 +23,12 @@ import java.util.UUID;
 @Slf4j
 @Component
 public class MessageListener {
+    private final ChannelService channelService;
     private final AbstractMessageHandler<String> messageHandler;
     private final Cache<UUID, SocketIOClient> cache = CacheBuilder.newBuilder().build();
 
-    public MessageListener(AbstractMessageHandler<String> messageHandler) {
+    public MessageListener(ChannelService channelService, AbstractMessageHandler<String> messageHandler) {
+        this.channelService = channelService;
         this.messageHandler = messageHandler;
     }
 
@@ -78,9 +81,10 @@ public class MessageListener {
         cache.put(sessionId, socketIOClient);
         SocketIONamespace namespace = socketIOClient.getNamespace();
         HandshakeData handshakeData = socketIOClient.getHandshakeData();
-        String room = handshakeData.getSingleUrlParam("room");
+//        String room = handshakeData.getSingleUrlParam("room");
         String userId = handshakeData.getSingleUrlParam("userId");
-        log.info("current namespace:{}, room: {}", namespace.getName(), room);
-        namespace.getBroadcastOperations().sendEvent(EventEnum.NOTICE.getCode(), userId);
+//        log.info("current namespace:{}, room: {}", namespace.getName(), room);
+//        namespace.getBroadcastOperations().sendEvent(EventEnum.NOTICE.getCode(), userId);
+        channelService.joinRoom(namespace, userId);
     }
 }
