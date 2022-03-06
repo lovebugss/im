@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: im-connect-netty
+
+server:
+  port: 18071
+  address: 192.168.8.122
+debug: true
+im:
+  connect:
+    host: 192.168.8.122
+    port: 8888

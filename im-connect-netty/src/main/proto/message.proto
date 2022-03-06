@@ -1,0 +1,19 @@
+syntax = "proto3";
+option java_package = "com.itrjp.im.connect.protobuf";
+option java_outer_classname = "MessageProtobuf";// 生成的外部类名，同时也是文件名
+
+// protobuf 使用 message 管理数据
+message Message {
+  enum Type{
+    PUSH = 0;
+    BROADCAST = 1;
+  }
+  // 消息类型
+  enum DataType{
+    CHAT = 0;
+    IMAGE = 1;
+  }
+  Type type = 1;
+  string data = 3;
+  DataType dataType = 2;
+}

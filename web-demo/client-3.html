@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="protobuf.min.js"></script>
+
+</head>
+<body>
+
+<button onclick="sendMsg()">手动发送发送</button>
+<script>
+
+    let buffer;
+
+    /**
+     * 手动发送消息
+     */
+    function sendMsg() {
+        let cuTime = new Date().getTime();
+        let payload = {dataType: 0, type: 0, content: "hello server 我是客户端 手动发送 !!"};
+        let message = cusMessage.create(payload); // or use .fromObject if conversion is necessary
+        buffer = cusMessage.encode(message).finish();
+        webSocket.send(buffer);
+    }
+
+    let cusMessage;
+
+    /**
+     * 初始化 cusMessage
+     * @param fileName
+     * @param className
+     */
+    function initCusMsg(fileName, className) {
+        return protobuf.load(fileName)
+            .then((root) => {
+                cusMessage = root.lookupType(className);
+                return cusMessage;
+            });
+    }
+
+    const address = "ws://127.0.0.1:8888/ws?room_id=1&t=app_id=1&k=1";
+
+    let webSocket = new WebSocket(address);
+
+    webSocket.onopen = function () {
+
+        console.log("webSocket连接建立成功... " + "服务端address: " + address);
+
+        let cusMsgPromise = initCusMsg("Msg.proto", "protoMsg.Msg");
+
+        cusMsgPromise.then((cusMsg) => {
+            //参考 https://github.com/protobufjs/protobuf.js#using-proto-files
+
+            // Exemplary payload
+            let cuTime = new Date().getTime();
+            let payload = {dataType: 0, type: 0, content: "hello server 我是客户端 手动发送 !!"};
+            // Verify the payload if necessary (i.e. when possibly incomplete or invalid)
+            let errMsg = cusMsg.verify(payload);
+            if (errMsg) {
+                throw Error(errMsg);
+            }
+            // Create a new message
+            let message = cusMsg.create(payload); // or use .fromObject if conversion is necessary
+            // Encode a message to an Uint8Array (browser) or Buffer (node)
+            buffer = cusMsg.encode(message).finish();
+
+            webSocket.send(buffer);
+        });
+    };
+
+
+    webSocket.onclose = (() => {
+        console.log("webSocket连接关闭...");
+    });
+
+    webSocket.onerror = (err => {
+        console.log("webSocket发生错误..." + err.data);
+    });
+
+    let reader = new FileReader();
+
+    //监听服务端响应消息
+    webSocket.onmessage = function (event) {
+        reader.readAsArrayBuffer(event.data);
+        reader.onload = () => {
+            let arrayBuffer = reader.result;
+            let buffer = new Uint8Array(arrayBuffer);
+
+            let resObject = cusMessage.decode(buffer);
+            console.log(resObject)
+        };
+    }
+</script>
+
+</body>
+</html>

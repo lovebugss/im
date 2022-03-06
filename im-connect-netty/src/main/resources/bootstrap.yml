@@ -6,7 +6,7 @@ nacos:
 
 spring:
   application:
-    name: im-gateway
+    name: im-connect-netty
   cloud:
     nacos:
       discovery:
@@ -15,5 +15,8 @@ spring:
         server-addr: ${nacos.ip}:${nacos.port}
         group: ${nacos.group}
         register-enabled: true
+    service-registry:
+      auto-registration:
+        enabled: true
   main:
     allow-bean-definition-overriding: true

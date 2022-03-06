@@ -1,5 +1,5 @@
 nacos:
-  ip: 192.168.8.122
+  ip: 127.0.0.1
   port: 8848
   namespace: 72482026-1fcb-451d-9c4b-d17171fcf649
   group: dev

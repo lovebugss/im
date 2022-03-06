@@ -6,12 +6,12 @@
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>2.3.12.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
-    </parent>    <modelVersion>4.0.0</modelVersion>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
     <groupId>com.itrjp</groupId>
     <artifactId>im</artifactId>
     <version>1.0-SNAPSHOT</version>
     <modules>
-        <module>im-auth</module>
         <module>im-api</module>
         <module>im-connect</module>
         <module>im-common</module>
@@ -20,6 +20,7 @@
         <module>im-gateway</module>
         <module>im-sync</module>
         <module>im-service</module>
+        <module>im-connect-netty</module>
     </modules>
     <packaging>pom</packaging>
     <properties>
@@ -33,6 +34,8 @@
         <spring-cloud-alibaba.version>2.2.7.RELEASE</spring-cloud-alibaba.version>
         <spring-cloud.version>Hoxton.SR12</spring-cloud.version>
         <jackson.version>2.11.4</jackson.version>
+        <protobuf.version>3.5.0</protobuf.version>
+        <grpc.version>1.14.0</grpc.version>
     </properties>
 
     <dependencyManagement>
@@ -90,7 +93,24 @@
             <dependency>
                 <groupId>com.google.protobuf</groupId>
                 <artifactId>protobuf-java</artifactId>
-                <version>3.17.3</version>
+                <version>${protobuf.version}</version>
+            </dependency>
+
+
+            <dependency>
+                <groupId>io.grpc</groupId>
+                <artifactId>grpc-netty</artifactId>
+                <version>${grpc.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.grpc</groupId>
+                <artifactId>grpc-protobuf</artifactId>
+                <version>${grpc.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.grpc</groupId>
+                <artifactId>grpc-stub</artifactId>
+                <version>${grpc.version}</version>
             </dependency>
             <!-- https://mvnrepository.com/artifact/com.googlecode.protobuf-java-format/protobuf-java-format -->
             <dependency>

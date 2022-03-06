@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package MessageProtobuf;
+
+// protobuf 使用 message 管理数据
+message Message {
+  enum Type{
+    PUSH = 0;
+    BROADCAST = 1;
+  }
+  // 消息类型
+  enum DataType{
+    CHAT = 0;
+    IMAGE = 1;
+  }
+  Type type = 1;
+  string data = 3;
+  DataType dataType = 2;
+}
