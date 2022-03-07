@@ -13,12 +13,9 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>im-api</module>
-        <module>im-connect</module>
         <module>im-common</module>
         <module>im-core</module>
-        <module>im-filter</module>
         <module>im-gateway</module>
-        <module>im-sync</module>
         <module>im-service</module>
         <module>im-connect-netty</module>
     </modules>
