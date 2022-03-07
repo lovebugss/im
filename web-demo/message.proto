@@ -2,18 +2,34 @@ syntax = "proto3";
 
 package MessageProtobuf;
 
-// protobuf 使用 message 管理数据
-message Message {
-  enum Type{
-    PUSH = 0;
-    BROADCAST = 1;
-  }
-  // 消息类型
-  enum DataType{
-    CHAT = 0;
-    IMAGE = 1;
-  }
-  Type type = 1;
-  string data = 3;
-  DataType dataType = 2;
+// 消息类型
+enum MessageType{
+  TEXT = 0; // 文本
+  IMAGE = 1; // 图片
+  VIDEO = 2; // 视频
+  FILE = 3; // 文件
+  NOTICE = 4; // 通知
+}
+// 消息体
+message Message{
+
+  MessageType type = 3; // 消息类型
+  int64 timestamp = 1; // 时间戳
+  string content = 2; // 消息体
+  int64 seq = 4; // 序号
+}
+
+enum NoticeType{
+  JOIN = 0; // 加入
+  LEAVE = 1; // 离开
+  ONLINE = 2;  // 上线
+  OFFLINE = 3; // 下线
+  OTHER = 4; // 其他
+}
+
+// 通知
+message Notice{
+  NoticeType type = 1;
+  string content = 2;
+  string timestamp = 3;
 }

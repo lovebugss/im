@@ -1,7 +1,7 @@
 package com.itrjp.im.connect.websocket;
 
+import com.itrjp.im.common.protobuf.MessageProtobuf;
 import com.itrjp.im.connect.listener.MessageListener;
-import com.itrjp.im.connect.protobuf.MessageProtobuf;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -83,9 +83,8 @@ public class MessageHandler extends SimpleChannelInboundHandler<MessageProtobuf.
         messageListener.onMessage(msg);
         //响应消息
         MessageProtobuf.Message.Builder builder = MessageProtobuf.Message.newBuilder();
-        builder.setType(MessageProtobuf.Message.Type.PUSH);
-        builder.setData("好的客户端 i received ");
-        builder.setDataTypeValue(0);
+        builder.setType(MessageProtobuf.MessageType.TEXT);
+        builder.setContent("好的客户端 i received ");
         MessageProtobuf.Message build = builder.build();
         ctx.channel().writeAndFlush(new MessageProtobuf.Message[]{build, build});
 

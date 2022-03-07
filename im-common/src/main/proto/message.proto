@@ -1,15 +1,34 @@
 syntax = "proto3";
-option java_package = "com.itrjp.im.protobuf";
-option java_outer_classname = "MessageModel";// 生成的外部类名，同时也是文件名
+option java_package = "com.itrjp.im.common.protobuf";
+option java_outer_classname = "MessageProtobuf";// 生成的外部类名，同时也是文件名
+// 消息类型
+enum MessageType{
+  TEXT = 0; // 文本
+  IMAGE = 1; // 图片
+  VIDEO = 2; // 视频
+  FILE = 3; // 文件
+  NOTICE = 4; // 通知
+}
+// 消息体
+message Message{
 
-// protobuf 使用 message 管理数据
-message Message {
-  enum Type{
-    CHAT = 0;
-    IMAGE = 1;
-  }
-  Type type = 1;
-  string data = 2;
-  string from = 3;
-  string to = 4;
+  MessageType type = 3; // 消息类型
+  int64 timestamp = 1; // 时间戳
+  string content = 2; // 消息体
+  int64 seq = 4; // 序号
+}
+
+enum NoticeType{
+  JOIN = 0; // 加入
+  LEAVE = 1; // 离开
+  ONLINE = 2;  // 上线
+  OFFLINE = 3; // 下线
+  OTHER = 4; // 其他
+}
+
+// 通知
+message Notice{
+  NoticeType type = 1;
+  string content = 2;
+  string timestamp = 3;
 }

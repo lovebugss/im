@@ -1,6 +1,6 @@
 package com.itrjp.im.connect.listener;
 
-import com.itrjp.im.connect.protobuf.MessageProtobuf;
+import com.itrjp.im.common.protobuf.MessageProtobuf;
 
 /**
  * TODO

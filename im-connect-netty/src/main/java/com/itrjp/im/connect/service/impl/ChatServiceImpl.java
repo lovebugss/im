@@ -1,6 +1,6 @@
 package com.itrjp.im.connect.service.impl;
 
-import com.itrjp.im.connect.protobuf.MessageProtobuf;
+import com.itrjp.im.common.protobuf.MessageProtobuf;
 import com.itrjp.im.connect.service.ChatService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
