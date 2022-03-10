@@ -3,11 +3,9 @@ package com.itrjp.im.connect.websocket;
 import com.google.protobuf.MessageLiteOrBuilder;
 import com.itrjp.im.common.protobuf.MessageProtobuf;
 import com.itrjp.im.connect.config.WebSocketProperties;
-import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufUtil;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.*;
-import io.netty.handler.codec.MessageToMessageDecoder;
 import io.netty.handler.codec.http.*;
 import io.netty.handler.codec.http.websocketx.*;
 import io.netty.handler.codec.http.websocketx.extensions.compression.WebSocketServerCompressionHandler;
@@ -34,13 +32,15 @@ import static io.netty.handler.codec.http.HttpResponseStatus.FORBIDDEN;
 @ChannelHandler.Sharable
 public class WebSocketServerHandler extends SimpleChannelInboundHandler<Object> {
     private static final String WEBSOCKET_PATH = "/ws";
+    private final ChannelHub channelHub;
     private WebSocketServerHandshaker handshaker;
     private WebSocketProperties webSocketProperties;
     private MessageHandler messageListener;
 
-    public WebSocketServerHandler(WebSocketProperties webSocketProperties, MessageHandler messageListener) {
+    public WebSocketServerHandler(WebSocketProperties webSocketProperties, MessageHandler messageListener, ChannelHub channelHub) {
         this.webSocketProperties = webSocketProperties;
         this.messageListener = messageListener;
+        this.channelHub = channelHub;
     }
 
     private void sendHttpResponse(ChannelHandlerContext ctx, FullHttpRequest req, FullHttpResponse res) {
@@ -104,49 +104,14 @@ public class WebSocketServerHandler extends SimpleChannelInboundHandler<Object> 
             pipeline.addLast(new ChunkedWriteHandler());
 
             pipeline.addLast(new WebSocketServerCompressionHandler());
+            pipeline.addLast(new WebSocketFrameAggregator(Integer.MAX_VALUE));
 //            pipeline.addLast(new WebSocketServerProtocolHandler(WEBSOCKET_PATH, null, true));
 
             pipeline.addLast(new ProtobufVarint32FrameDecoder());
             pipeline.addLast(new ProtobufVarint32LengthFieldPrepender());
 
             //将WebSocketFrame转为ByteBuf 以便后面的 ProtobufDecoder 解码
-            pipeline.addLast(new MessageToMessageDecoder<WebSocketFrame>() {
-                @Override
-                protected void decode(ChannelHandlerContext ctx, WebSocketFrame msg, List<Object> out) throws Exception {
-                    ByteBuf byteBuf = msg.content();
-                    if (msg instanceof BinaryWebSocketFrame) {
-                        // 二进制消息
-                        System.out.println("BinaryWebSocketFrame Received : ");
-                        byteBuf.retain();
-                        out.add(msg.content());
-                    } else if (msg instanceof TextWebSocketFrame) {
-                        // 文本消息
-                        System.out.println("TextWebSocketFrame Received : ");
-                        System.out.println(((TextWebSocketFrame) msg).text());
-                    } else if (msg instanceof PingWebSocketFrame) {
-                        // ping
-                        System.out.println("PingWebSocketFrame Received : ");
-                        System.out.println(((PingWebSocketFrame) msg).content());
-                    } else if (msg instanceof PongWebSocketFrame) {
-                        // pong
-                        System.out.println("PongWebSocketFrame Received : ");
-                        System.out.println(((PongWebSocketFrame) msg).content());
-                    } else if (msg instanceof CloseWebSocketFrame) {
-                        // close
-                        System.out.println("CloseWebSocketFrame Received : ");
-                        System.out.println("ReasonText :" + ((CloseWebSocketFrame) msg).reasonText());
-                        System.out.println("StatusCode : " + ((CloseWebSocketFrame) msg).statusCode());
-                        ctx.channel().close();
-                    } else if (msg instanceof FullHttpRequest) {
-                        FullHttpRequest request = (FullHttpRequest) msg;
-                        QueryStringDecoder queryString = new QueryStringDecoder(request.uri());
-
-                    } else {
-                        System.out.println("Unsupported WebSocketFrame");
-                    }
-
-                }
-            });
+            pipeline.addLast(new WebSocketFrameToProtobufDecoder());
 
             pipeline.addLast(new ProtobufDecoder(MessageProtobuf.Message.getDefaultInstance()));
             //自定义入站处理
@@ -163,6 +128,8 @@ public class WebSocketServerHandler extends SimpleChannelInboundHandler<Object> 
             });
             handshaker.handshake(ctx.channel(), req).addListener(future -> {
                 if (future.isSuccess()) {
+                    // 握手成功, 连接客户端
+
                     log.info("handshaker success");
                 } else {
                     handshaker.close(ctx.channel(), new CloseWebSocketFrame());

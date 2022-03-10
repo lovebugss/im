@@ -23,6 +23,7 @@ import io.netty.util.concurrent.Future;
  * @date 2022/2/18 16:54
  */
 public class WebSocketServer {
+    private final ChannelHub channelHub;
     private SslContext sslCtx;
     private EventLoopGroup bossGroup;
     private EventLoopGroup workerGroup;
@@ -34,7 +35,7 @@ public class WebSocketServer {
     public WebSocketServer(WebSocketProperties configure, ChatService chatService) {
         this.configuration = configure;
         this.chatService = chatService;
-
+        channelHub = new ChannelHub(configure);
     }
 
     public void init() throws Exception {
@@ -45,7 +46,7 @@ public class WebSocketServer {
         if (configuration.isUseSSL()) {
             sslCtx = createSslContext(configuration);
         }
-        webSocketInitializer = new WebSocketInitializer(this.configuration, sslCtx, chatService);
+        webSocketInitializer = new WebSocketInitializer(this.configuration, sslCtx, chatService, channelHub);
     }
 
     /**

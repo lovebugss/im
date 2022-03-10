@@ -1,5 +1,7 @@
 package com.itrjp.im.connect.websocket;
 
+import com.itrjp.im.connect.config.WebSocketProperties;
+
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -15,6 +17,11 @@ public class ChannelHub {
      * 所有channels
      */
     private final Map<String, Channel> channels = new ConcurrentHashMap<>();
+    WebSocketProperties properties;
+
+    public ChannelHub(WebSocketProperties configure) {
+        properties = configure;
+    }
 
 
     /**

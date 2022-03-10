@@ -40,20 +40,6 @@ public class MessageHandler extends SimpleChannelInboundHandler<MessageProtobuf.
 
     }
 
-
-    //每当从服务端读到客户端写入信息时，将信息转发给其他客户端的 Channel。
-    // 其中如果你使用的是 Netty 5.x 版本时，需要把 channelRead0() 重命名为messageReceived()
-    protected void messageReceived(ChannelHandlerContext channelHandlerContext, String msg) {
-        Channel incoming = channelHandlerContext.channel();
-        for (Channel channel : channels) {//遍历ChannelGroup中的channel
-            if (channel != incoming) {//找到加入到ChannelGroup中的channel后，将录入的信息回写给除去发送信息的客户端
-                channel.writeAndFlush("[" + incoming.remoteAddress() + "]" + msg + "\n");
-            } else {
-                channel.writeAndFlush("[服务器消息]" + msg + "\n");
-            }
-        }
-    }
-
     //服务端监听到客户端活动
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception { // (5)

@@ -18,14 +18,16 @@ import io.netty.handler.ssl.SslContext;
 public class WebSocketInitializer extends ChannelInitializer<SocketChannel> {
 
     private final WebSocketProperties webSocketProperties;
+    private final ChannelHub channelHub;
     private final SslContext sslCtx;
 
     private WebSocketServerHandler webSocketServerHandler;
 
-    public WebSocketInitializer(WebSocketProperties webSocketProperties, SslContext sslCtx, ChatService chatService) {
+    public WebSocketInitializer(WebSocketProperties webSocketProperties, SslContext sslCtx, ChatService chatService, ChannelHub channelHub) {
         this.webSocketProperties = webSocketProperties;
         this.sslCtx = sslCtx;
-        webSocketServerHandler = new WebSocketServerHandler(webSocketProperties, new MessageHandler(chatService));
+        this.channelHub = channelHub;
+        webSocketServerHandler = new WebSocketServerHandler(webSocketProperties, new MessageHandler(chatService), channelHub);
     }
 
     @Override
