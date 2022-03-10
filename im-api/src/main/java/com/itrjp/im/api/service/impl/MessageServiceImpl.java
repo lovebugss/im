@@ -1,6 +1,7 @@
 package com.itrjp.im.api.service.impl;
 
 import com.itrjp.im.api.pojo.MessageInfo;
+import com.itrjp.im.api.pojo.vo.MessageParam;
 import com.itrjp.im.api.service.MessageService;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +19,8 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public String sendMessage() {
+    public String sendMessage(MessageParam messageParam) {
+
         return "";
     }
 }

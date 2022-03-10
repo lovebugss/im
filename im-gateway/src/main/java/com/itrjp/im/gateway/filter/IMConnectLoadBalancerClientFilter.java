@@ -3,7 +3,6 @@ package com.itrjp.im.gateway.filter;
 import org.springframework.cloud.gateway.config.LoadBalancerProperties;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.ReactiveLoadBalancerClientFilter;
-import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 

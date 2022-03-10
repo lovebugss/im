@@ -45,7 +45,7 @@
         var userName = 'user' + Math.floor((Math.random() * 1000) + 1);
 
         var socket = io.connect('http://localhost:8888/ch_001?room=111111&channel=ch_001&userId=' + userName, {
-            transports:['websocket']
+            transports: ['websocket']
         });
 
         socket.on('connect', function () {
@@ -55,8 +55,8 @@
         socket.on('message', function (data) {
             output('<span class="username-msg">' + data.userName + ':</span> ' + data.message);
         });
-        socket.on('list', function (data){
-            var element = data.map(function (d){
+        socket.on('list', function (data) {
+            var element = data.map(function (d) {
                 return '<div>' + d + '</div>'
             })
             $('#user-list').prepend(element);

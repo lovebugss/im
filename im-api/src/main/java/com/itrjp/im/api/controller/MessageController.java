@@ -1,6 +1,7 @@
 package com.itrjp.im.api.controller;
 
 import com.itrjp.im.api.pojo.MessageInfo;
+import com.itrjp.im.api.pojo.vo.MessageParam;
 import com.itrjp.im.api.service.MessageService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -32,8 +33,8 @@ public class MessageController {
      * @return
      */
     @PostMapping("send")
-    public ResponseEntity<?> sendMessage() {
-        String msgId = messageService.sendMessage();
+    public ResponseEntity<?> sendMessage(MessageParam messageParam) {
+        String msgId = messageService.sendMessage(messageParam);
         return ResponseEntity.ok(msgId);
     }
 

@@ -10,6 +10,7 @@ public interface PubSub {
 
     /**
      * 发布
+     *
      * @param type
      * @param message
      */
@@ -17,6 +18,7 @@ public interface PubSub {
 
     /**
      * 订阅
+     *
      * @param type
      * @param listener
      * @param clazz

@@ -1,8 +1,8 @@
 package com.itrjp.im.connect.websocket;
 
 import com.google.protobuf.MessageLiteOrBuilder;
-import com.itrjp.im.connect.config.WebSocketProperties;
 import com.itrjp.im.common.protobuf.MessageProtobuf;
+import com.itrjp.im.connect.config.WebSocketProperties;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufUtil;
 import io.netty.buffer.Unpooled;

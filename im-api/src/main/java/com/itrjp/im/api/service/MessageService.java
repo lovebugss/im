@@ -1,6 +1,7 @@
 package com.itrjp.im.api.service;
 
 import com.itrjp.im.api.pojo.MessageInfo;
+import com.itrjp.im.api.pojo.vo.MessageParam;
 
 /**
  * TODO
@@ -11,5 +12,5 @@ import com.itrjp.im.api.pojo.MessageInfo;
 public interface MessageService {
     MessageInfo queryMessageByMsgId(String msgId);
 
-    String sendMessage();
+    String sendMessage(MessageParam messageParam);
 }

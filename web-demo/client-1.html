@@ -25,6 +25,7 @@
         .connect-msg {
             color: green;
         }
+
         .notice {
             color: yellowgreen;
         }
@@ -48,7 +49,7 @@
         var userName = 'user' + Math.floor((Math.random() * 1000) + 1);
 
         var socket = io.connect('http://172.16.20.126:8888/ch_001?room=111111&channel=ch_001&userId=' + userName, {
-            transports:['websocket']
+            transports: ['websocket']
         });
 
         socket.on('connect', function () {
@@ -62,8 +63,8 @@
         socket.on('notice', function (data) {
             output('<span class="notice">' + data + ' join the room</span> ');
         });
-        socket.on('list', function (data){
-            var element = data.map(function (d){
+        socket.on('list', function (data) {
+            var element = data.map(function (d) {
                 return '<div>' + d + '</div>'
             })
             $('#user-list').prepend(element);

@@ -15,10 +15,10 @@ spring:
           uri: lb:ws://im-connect
           predicates:
             - Path=/socket.io/**
-#          filters:
-#            - RewritePath=/socket.io/(?<segment>/?.*), /$\{segment}
-#            - StripPrefix=0
-#            - DedupeResponseHeader= Proxy-Authenticate Proxy-Authorization  Keep-Alive TE Trailer Transfer-Encoding
+      #          filters:
+      #            - RewritePath=/socket.io/(?<segment>/?.*), /$\{segment}
+      #            - StripPrefix=0
+      #            - DedupeResponseHeader= Proxy-Authenticate Proxy-Authorization  Keep-Alive TE Trailer Transfer-Encoding
       globalcors:
         cors-configurations:
           '[/**]':
