@@ -15,6 +15,9 @@ import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.util.SelfSignedCertificate;
 import io.netty.util.concurrent.Future;
+import lombok.extern.slf4j.Slf4j;
+
+import java.util.function.Consumer;
 
 /**
  * WebSocket Server
@@ -22,23 +25,28 @@ import io.netty.util.concurrent.Future;
  * @author renjp
  * @date 2022/2/18 16:54
  */
+@Slf4j
 public class WebSocketServer {
-    private final ChannelHub channelHub;
+    private final ChatRoomHub chatRoomHub;
+    private final WebSocketProperties configuration;
+    private final ChatService chatService;
     private SslContext sslCtx;
     private EventLoopGroup bossGroup;
     private EventLoopGroup workerGroup;
-    private WebSocketProperties configuration;
-    private ServerBootstrap bootstrap;
-    private ChatService chatService;
-    private WebSocketInitializer webSocketInitializer;
+    private WebSocketChannelInitializer webSocketChannelInitializer;
 
     public WebSocketServer(WebSocketProperties configure, ChatService chatService) {
         this.configuration = configure;
         this.chatService = chatService;
-        channelHub = new ChannelHub(configure);
+        chatRoomHub = new ChatRoomHub(configure);
     }
 
-    public void init() throws Exception {
+    /**
+     * 初始化
+     *
+     * @throws Exception
+     */
+    private void initiation() throws Exception {
         // group
         bossGroup = new NioEventLoopGroup(configuration.getBossThreads());
         workerGroup = new NioEventLoopGroup(configuration.getWorkThreads());
@@ -46,7 +54,7 @@ public class WebSocketServer {
         if (configuration.isUseSSL()) {
             sslCtx = createSslContext(configuration);
         }
-        webSocketInitializer = new WebSocketInitializer(this.configuration, sslCtx, chatService, channelHub);
+        webSocketChannelInitializer = new WebSocketChannelInitializer(this.configuration, sslCtx, chatService, chatRoomHub);
     }
 
     /**
@@ -61,33 +69,52 @@ public class WebSocketServer {
         return SslContextBuilder.forServer(ssc.certificate(), ssc.privateKey()).build();
     }
 
-
     public void start() throws Exception {
-        init();
-        startSync().syncUninterruptibly();
+        start((b) -> {
+        });
+    }
+
+    /**
+     * 开始
+     *
+     * @return
+     * @throws Exception
+     */
+    public void start(Consumer<Boolean> callback) throws Exception {
+        initiation();
+        startSync().addListener(future -> {
+                    boolean success = future.isSuccess();
+                    if (success) {
+                        log.info("WebSocket server started at port: {}", configuration.getPort());
+
+                    } else {
+                        log.warn("WebSocket server startup failed", future.cause());
+                    }
+                    callback.accept(success);
+                })
+                .syncUninterruptibly();
     }
 
     private Future<Void> startSync() {
 
-        bootstrap = new ServerBootstrap();
-        bootstrap.option(ChannelOption.SO_BACKLOG, configuration.getTcp().getBacklog());
-        Class<? extends ServerChannel> channelClass = NioServerSocketChannel.class;
+        ServerBootstrap bootstrap = new ServerBootstrap();
+        addOption(bootstrap);
 
+        Class<? extends ServerChannel> channelClass = NioServerSocketChannel.class;
         bootstrap.group(bossGroup, workerGroup)
                 .channel(channelClass)
                 .handler(new LoggingHandler(LogLevel.DEBUG))
-                .childHandler(webSocketInitializer);
+                .childHandler(webSocketChannelInitializer);
 
+        return bootstrap.bind(configuration.getPort());
+    }
 
-        return bootstrap.bind(configuration.getPort())
-                .addListener(future -> {
-                    if (future.isSuccess()) {
-                        System.out.println("WebSocket server started at port: " + configuration.getPort());
-                    }
-                });
+    private void addOption(ServerBootstrap bootstrap) {
+        bootstrap.option(ChannelOption.SO_BACKLOG, configuration.getTcp().getBacklog());
     }
 
     public void close() {
+        log.info("stop server...");
         bossGroup.shutdownGracefully();
         workerGroup.shutdownGracefully();
     }

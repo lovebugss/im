@@ -1,6 +1,7 @@
 package com.itrjp.im.connect.listener;
 
 import com.itrjp.im.common.protobuf.MessageProtobuf;
+import org.springframework.kafka.annotation.KafkaListener;
 
 /**
  * TODO
@@ -8,7 +9,7 @@ import com.itrjp.im.common.protobuf.MessageProtobuf;
  * @author renjp
  * @date 2022/3/6 10:37
  */
-public interface MessageListener {
+public class MessageListener {
 
 
     /**
@@ -16,5 +17,10 @@ public interface MessageListener {
      *
      * @param messageProtobuf
      */
-    void onMessage(MessageProtobuf.Message messageProtobuf);
+    @KafkaListener(topics = {"${im.connect.topic}"})
+    void onMessage(MessageProtobuf.Message messageProtobuf) {
+
+    }
+
+
 }

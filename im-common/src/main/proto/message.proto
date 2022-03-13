@@ -16,6 +16,9 @@ message Message{
   int64 timestamp = 1; // 时间戳
   string content = 2; // 消息体
   int64 seq = 4; // 序号
+  string roomId = 5; // 房间id
+  string sender = 6; // 发送人
+  string receiver = 7; // 接收人
 }
 
 enum NoticeType{

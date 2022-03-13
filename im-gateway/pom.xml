@@ -27,12 +27,12 @@
         <dependency>
             <groupId>com.itrjp</groupId>
             <artifactId>im-core</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>com.itrjp</groupId>
             <artifactId>im-common</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
     <build>

@@ -60,7 +60,7 @@
 
         var userName = 'user' + Math.floor((Math.random() * 1000) + 1);
 
-        var ws = new WebSocket("ws://localhost:8888/ws");
+        var ws = new WebSocket("ws://localhost:8888/ws?roomId=111");
 
         ws.onopen = function (evt) {
             console.log("Connection open ...");
@@ -71,7 +71,7 @@
 
                 // Exemplary payload
                 let cuTime = new Date().getTime();
-                let payload = {dataType: 0, type: 0, data: "hello server 我是客户端 手动发送 !!"};
+                let payload = {seq: 0, type: 0, content: "test", timestamp: new Date().getTime()};
                 // Verify the payload if necessary (i.e. when possibly incomplete or invalid)
                 let errMsg = cusMsg.verify(payload);
                 if (errMsg) {
@@ -113,7 +113,7 @@
             var message = $('#msg').val();
             $('#msg').val('');
 
-            let payload = {dataType: 0, type: 0, data: message};
+            let payload = {seq: 0, type: 0, content: message, timestamp: new Date().getTime()};
             console.log(`payload: ${JSON.stringify(payload)}`)
             let data = cusMessage.create(payload); // or use .fromObject if conversion is necessary
             buffer = cusMessage.encode(data).finish();

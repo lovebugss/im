@@ -1,5 +1,51 @@
 spring:
   application:
     name: im-service
+  kafka:
+    bootstrap-servers: kafka1:9092,kafka2:9093,kafka3:9094  #bootstrap-servers：连接kafka的地址，多个地址用逗号分隔
+    consumer:
+      group-id: im-service-group
+      enable-auto-commit: true
+      auto-commit-interval: 100ms
+      properties:
+        session.timeout.ms: 15000
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.ByteArrayDeserializer
+      auto-offset-reset: earliest
+    producer:
+      retries: 0 #若设置大于0的值，客户端会将发送失败的记录重新发送
+      batch-size: 16384 #当将多个记录被发送到同一个分区时， Producer 将尝试将记录组合到更少的请求中。这有助于提升客户端和服务器端的性能。这个配置控制一个批次的默认大小（以字节为单位）。16384是缺省的配置
+      buffer-memory: 33554432 #Producer 用来缓冲等待被发送到服务器的记录的总字节数，33554432是缺省配置
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer #关键字的序列化类
+      value-serializer: org.apache.kafka.common.serialization.ByteArraySerializer #值的序列化类
+  # 数据库访问配置
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/im?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8
+    username: root
+    password: 123456
+  redis:
+    database: 0
+    host: localhost
+    port: 6379
+    # 连接超时时间（毫秒）
+    timeout: 5000ms
+    # 连接池最大连接数（使用负值表示没有限制）
+    lettuce:
+      pool:
+        max-active: 8
+        # 连接池最大阻塞等待时间
+        max-wait: -1ms
+        # 连接池中的最大空闲连接
+        max-idle: 8
+        # 连接池中的最小空闲连接
+        min-idle: 0
+  cache:
+    type: redis
+
+  cloud:
+    service-registry:
+      auto-registration:
+        enabled: false
 server:
   port: 18081

@@ -2,12 +2,19 @@ syntax = "proto3";
 option java_package = "com.itrjp.im.common.protobuf";
 option java_outer_classname = "KafkaProtobuf";// 生成的外部类名，同时也是文件名
 
-message KafkaDTO{
-  enum MessageType{
-    MESSAGE = 0;
-    JOIN = 1;
-    LEAVE = 2;
-  }
-  MessageType msgType = 1;
-
+// 上线
+message Online{
+  int64 time = 1;
+  string sessionId = 2;
+  string roomId = 3;
+  string userId = 4;
+  string context = 5;
+}
+// 下线
+message OffLine{
+  int64 time = 1;
+  string sessionId = 2;
+  string roomId = 3;
+  string userId = 4;
+  string context = 5;
 }

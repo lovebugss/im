@@ -1,12 +1,34 @@
 spring:
   application:
     name: im-connect-netty
-
+  kafka:
+    bootstrap-servers: kafka1:9092,kafka2:9093,kafka3:9094  #bootstrap-servers：连接kafka的地址，多个地址用逗号分隔
+    consumer:
+      group-id: im-connect-group
+      enable-auto-commit: true
+      auto-commit-interval: 100ms
+      properties:
+        session.timeout.ms: 15000
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.ByteArrayDeserializer
+      auto-offset-reset: earliest
+    producer:
+      retries: 0 #若设置大于0的值，客户端会将发送失败的记录重新发送
+      batch-size: 16384 #当将多个记录被发送到同一个分区时， Producer 将尝试将记录组合到更少的请求中。这有助于提升客户端和服务器端的性能。这个配置控制一个批次的默认大小（以字节为单位）。16384是缺省的配置
+      buffer-memory: 33554432 #Producer 用来缓冲等待被发送到服务器的记录的总字节数，33554432是缺省配置
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer #关键字的序列化类
+      value-serializer: org.apache.kafka.common.serialization.ByteArraySerializer #值的序列化类
 server:
   port: 18071
   address: 192.168.8.122
-debug: true
+debug: false
+dubbo:
+  cloud:
+    subscribed-services: im-status
+  protocol:
+    port: -1
 im:
   connect:
     host: 192.168.8.122
     port: 8888
+    topic: im-connect-001

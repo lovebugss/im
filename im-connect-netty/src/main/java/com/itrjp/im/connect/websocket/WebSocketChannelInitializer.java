@@ -10,24 +10,19 @@ import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.ssl.SslContext;
 
 /**
- * TODO
+ * WebSocketInitializer
  *
  * @author renjp
  * @date 2022/2/19 18:02
  */
-public class WebSocketInitializer extends ChannelInitializer<SocketChannel> {
+public class WebSocketChannelInitializer extends ChannelInitializer<SocketChannel> {
 
-    private final WebSocketProperties webSocketProperties;
-    private final ChannelHub channelHub;
     private final SslContext sslCtx;
+    private final WebSocketServerHandler webSocketServerHandler;
 
-    private WebSocketServerHandler webSocketServerHandler;
-
-    public WebSocketInitializer(WebSocketProperties webSocketProperties, SslContext sslCtx, ChatService chatService, ChannelHub channelHub) {
-        this.webSocketProperties = webSocketProperties;
+    public WebSocketChannelInitializer(WebSocketProperties webSocketProperties, SslContext sslCtx, ChatService chatService, ChatRoomHub chatRoomHub) {
         this.sslCtx = sslCtx;
-        this.channelHub = channelHub;
-        webSocketServerHandler = new WebSocketServerHandler(webSocketProperties, new MessageHandler(chatService), channelHub);
+        webSocketServerHandler = new WebSocketServerHandler(webSocketProperties, chatRoomHub, chatService);
     }
 
     @Override
@@ -37,7 +32,7 @@ public class WebSocketInitializer extends ChannelInitializer<SocketChannel> {
             pipeline.addLast(sslCtx.newHandler(ch.alloc()));
         }
         pipeline.addLast("http-server-codec", new HttpServerCodec());
-        pipeline.addLast(new HttpObjectAggregator(65536));
+        pipeline.addLast("http-object-aggregator", new HttpObjectAggregator(65536));
         pipeline.addLast("websocket-server-handler", webSocketServerHandler);
 
     }

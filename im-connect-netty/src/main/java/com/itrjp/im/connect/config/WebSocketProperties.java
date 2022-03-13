@@ -24,6 +24,8 @@ public class WebSocketProperties {
     @Value("${im.server.port:${server.port:18001}}")
     private int port;
 
+    private String topic;
+
     private Tcp tcp = new Tcp();
     private boolean useSSL;
 
@@ -73,6 +75,14 @@ public class WebSocketProperties {
 
     public void setTcp(Tcp tcp) {
         this.tcp = tcp;
+    }
+
+    public void setTopic(String topic) {
+        this.topic = topic;
+    }
+
+    public String getTopic() {
+        return topic;
     }
 
     public static class Tcp {

@@ -1,9 +1,11 @@
 package com.itrjp.im.connect.config;
 
-import com.alibaba.cloud.nacos.registry.NacosAutoServiceRegistration;
+import com.alibaba.cloud.nacos.NacosDiscoveryProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.annotation.PostConstruct;
+import java.time.LocalDateTime;
+import java.util.Map;
 
 /**
  * nacos 配置
@@ -11,19 +13,18 @@ import javax.annotation.PostConstruct;
 @Configuration
 public class NacosConfig {
 
-    private final NacosAutoServiceRegistration nacosAutoServiceRegistration;
-    private final WebSocketProperties webSocketProperties;
+    private final WebSocketProperties properties;
 
-    public NacosConfig(NacosAutoServiceRegistration nacosAutoServiceRegistration, WebSocketProperties webSocketProperties) {
-        this.nacosAutoServiceRegistration = nacosAutoServiceRegistration;
-        this.webSocketProperties = webSocketProperties;
+    public NacosConfig(WebSocketProperties properties) {
+        this.properties = properties;
     }
 
-    @PostConstruct
-    public void init() {
-        // 手动注册到 nacos
-        nacosAutoServiceRegistration.setPort(webSocketProperties.getPort());
-        nacosAutoServiceRegistration.start();
+    @Bean
+    public NacosDiscoveryProperties nacosProperties() {
+        NacosDiscoveryProperties nacosDiscoveryProperties = new NacosDiscoveryProperties();
+        Map<String, String> metadata = nacosDiscoveryProperties.getMetadata();
+        metadata.put("topic", properties.getTopic());
+        metadata.put("start-time", LocalDateTime.now().toString());
+        return nacosDiscoveryProperties;
     }
-
 }

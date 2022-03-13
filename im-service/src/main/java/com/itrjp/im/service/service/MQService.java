@@ -1,10 +1,10 @@
 package com.itrjp.im.service.service;
 
 /**
- * 上线
+ * TODO
  *
  * @author renjp
- * @date 2022/3/8 22:51
+ * @date 2022/3/12 16:29
  */
-public interface OffLineService {
+public interface MQService {
 }

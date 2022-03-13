@@ -1,5 +1,6 @@
 package com.itrjp.im.connect.websocket;
 
+import com.alibaba.cloud.nacos.registry.NacosAutoServiceRegistration;
 import com.itrjp.im.connect.config.WebSocketProperties;
 import com.itrjp.im.connect.service.ChatService;
 import org.springframework.beans.factory.DisposableBean;
@@ -14,13 +15,14 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class WebSocketServiceRunner implements CommandLineRunner, DisposableBean {
-
+    private final NacosAutoServiceRegistration nacosAutoServiceRegistration;
     private final WebSocketProperties configuration;
     private final ChatService chatService;
     private WebSocketServer server;
 
 
-    public WebSocketServiceRunner(WebSocketProperties configuration, ChatService chatService) {
+    public WebSocketServiceRunner(NacosAutoServiceRegistration nacosAutoServiceRegistration, WebSocketProperties configuration, ChatService chatService) {
+        this.nacosAutoServiceRegistration = nacosAutoServiceRegistration;
         this.configuration = configuration;
         this.chatService = chatService;
     }
@@ -35,6 +37,12 @@ public class WebSocketServiceRunner implements CommandLineRunner, DisposableBean
     @Override
     public void run(String... args) throws Exception {
         server = new WebSocketServer(configuration, chatService);
-        server.start();
+        server.start((isSuccess) -> {
+            if (isSuccess) {
+                // 手动注册到 nacos
+                nacosAutoServiceRegistration.setPort(configuration.getPort());
+                nacosAutoServiceRegistration.start();
+            }
+        });
     }
 }
