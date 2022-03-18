@@ -1,0 +1,22 @@
+nacos:
+  ip: 127.0.0.1
+  port: 8848
+  namespace: 72482026-1fcb-451d-9c4b-d17171fcf649
+  group: dev
+
+spring:
+  application:
+    name: im-connect
+  cloud:
+    nacos:
+      discovery:
+        enabled: true
+        namespace: ${nacos.namespace}
+        server-addr: ${nacos.ip}:${nacos.port}
+        group: ${nacos.group}
+        register-enabled: true
+    service-registry:
+      auto-registration:
+        enabled: true
+  main:
+    allow-bean-definition-overriding: true
