@@ -13,7 +13,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
  */
 @SpringBootApplication
 @EnableDiscoveryClient
-@EnableDubbo(scanBasePackages = "com.itrjp.im.status")
+@EnableDubbo(scanBasePackages = "com.itrjp.im")
 public class IMStatusApplication {
     public static void main(String[] args) {
         SpringApplication.run(IMStatusApplication.class, args);

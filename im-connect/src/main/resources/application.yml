@@ -8,6 +8,11 @@ server:
   port: 18071
   address: 192.168.8.122
 debug: true
+dubbo:
+  cloud:
+    subscribed-services: im-status
+  protocol:
+    port: -1
 im:
   server:
     reuse-address: true

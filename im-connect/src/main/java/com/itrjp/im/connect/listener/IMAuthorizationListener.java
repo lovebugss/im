@@ -43,7 +43,8 @@ public class IMAuthorizationListener implements AuthorizationListener {
         if (room == null || channel == null || userId == null) {
             return false;
         }
-        // 创建频道
+
+        // 动态创建频道
         createNameSpace(channel);
         return true;
     }

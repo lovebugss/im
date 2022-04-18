@@ -44,7 +44,7 @@
 
         var userName = 'user' + Math.floor((Math.random() * 1000) + 1);
 
-        var socket = io.connect('http://localhost:8888/ch_001?room=111111&channel=ch_001&userId=' + userName, {
+        var socket = io.connect('http://192.168.8.122:18071/ch_001?room=111111&channel=ch_001&userId=' + userName, {
             transports: ['websocket']
         });
 

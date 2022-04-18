@@ -12,7 +12,6 @@ import com.itrjp.im.connect.websocket.RequestParam;
 import com.itrjp.im.connect.websocket.WebSocketClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +31,6 @@ public class ChatServiceImpl implements ChatService {
     private final TokenService tokenService;
     private final WebSocketProperties webSocketProperties;
 
-    @DubboReference
     private StatusService statusService;
 
 
@@ -49,7 +47,7 @@ public class ChatServiceImpl implements ChatService {
         HandshakeData handshakeData = client.getHandshakeData();
         log.info("用户上线");
         String session = client.getSessionId();
-        CompletableFuture<Void> completableFuture = statusService.onlineAsync(new OnlineOfflineDTO());
+        CompletableFuture<Boolean> completableFuture = statusService.onlineAsync(OnlineOfflineDTO.builder().build());
         completableFuture.whenComplete((r, e) -> {
             if (e != null) {
                 log.error("上线统计失败", e);
@@ -88,7 +86,7 @@ public class ChatServiceImpl implements ChatService {
      * @return
      */
     private boolean checkRoomLimit(String roomId) {
-        int roomPV = statusService.getRoomPV(roomId);
+        long roomPV = statusService.getRoomPV(roomId);
         log.info("current room pv: {}", roomPV);
         return true;
     }

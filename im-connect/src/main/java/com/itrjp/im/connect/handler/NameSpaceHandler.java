@@ -4,8 +4,7 @@ import com.corundumstudio.socketio.SocketIONamespace;
 import com.corundumstudio.socketio.SocketIOServer;
 import com.itrjp.im.connect.cache.NameSpaceCache;
 import com.itrjp.im.connect.enums.EventEnum;
-import com.itrjp.im.connect.listener.MessageListener;
-import com.itrjp.im.connect.message.Message;
+import com.itrjp.im.connect.listener.IMMessageListener;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
@@ -21,7 +20,7 @@ public class NameSpaceHandler {
 
     // 存在循环依赖, 使用ObjectProvider解决
     private final ObjectProvider<SocketIOServer> objectProvider;
-    private final MessageListener messageListener;
+    private final IMMessageListener messageListener;
     private final NameSpaceCache nameSpaceCache = NameSpaceCache.getInstance();
 
     /**
@@ -61,10 +60,12 @@ public class NameSpaceHandler {
     public void registerEvent(SocketIONamespace namespace) {
         log.info("register event, namespace:{}", namespace.getName());
         // 连接
-        namespace.addConnectListener(messageListener::onConnect);
+        namespace.addConnectListener(messageListener);
         // 断链
-        namespace.addDisconnectListener(messageListener::onDisconnect);
+        namespace.addDisconnectListener(messageListener);
+        // Ping
+        namespace.addPingListener(messageListener);
         // 消息
-        namespace.addEventListener(EventEnum.MESSAGE.getCode(), Message.class, messageListener::onData);
+        namespace.addEventListener(EventEnum.MESSAGE.getCode(), byte[].class, messageListener);
     }
 }

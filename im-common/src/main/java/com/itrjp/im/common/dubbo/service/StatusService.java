@@ -18,7 +18,7 @@ public interface StatusService {
      * @param roomId 房间ID
      * @return current uv
      */
-    int getRoomUV(String roomId);
+    long getRoomUV(String roomId);
 
     /**
      * 获取房间PV
@@ -26,7 +26,8 @@ public interface StatusService {
      * @param roomId 房间ID
      * @return current pv
      */
-    int getRoomPV(String roomId);
+    long getRoomPV(String roomId);
+
 
 
     /**
@@ -34,9 +35,10 @@ public interface StatusService {
      *
      * @param data
      */
-    void online(OnlineOfflineDTO data);
+    boolean online(OnlineOfflineDTO data);
 
-    CompletableFuture<Void> onlineAsync(OnlineOfflineDTO data);
+
+    CompletableFuture<Boolean> onlineAsync(OnlineOfflineDTO data);
 
     /**
      * 下线

@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
 /**
  * RedissonConfig 配置类
  */
-//@Configuration
+@Configuration
 public class RedissonConfigure {
 
     @Value("${redisson.address}")

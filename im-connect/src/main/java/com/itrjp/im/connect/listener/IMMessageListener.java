@@ -1,12 +1,15 @@
 package com.itrjp.im.connect.listener;
 
 import com.corundumstudio.socketio.*;
+import com.corundumstudio.socketio.listener.ConnectListener;
+import com.corundumstudio.socketio.listener.DataListener;
+import com.corundumstudio.socketio.listener.DisconnectListener;
+import com.corundumstudio.socketio.listener.PingListener;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.itrjp.im.connect.enums.EventEnum;
-import com.itrjp.im.connect.handler.AbstractMessageHandler;
-import com.itrjp.im.connect.message.Message;
 import com.itrjp.im.connect.service.ChannelService;
+import com.itrjp.im.connect.service.MessageService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -22,19 +25,20 @@ import java.util.UUID;
  */
 @Slf4j
 @Component
-public class MessageListener {
+public class IMMessageListener implements DataListener<byte[]>, ConnectListener, DisconnectListener, PingListener {
     private final ChannelService channelService;
-    private final AbstractMessageHandler<String> messageHandler;
-    private final Cache<UUID, SocketIOClient> cache = CacheBuilder.newBuilder().build();
+    private final MessageService messageService;
 
-    public MessageListener(ChannelService channelService, AbstractMessageHandler<String> messageHandler) {
+    public IMMessageListener(ChannelService channelService, MessageService messageService) {
         this.channelService = channelService;
-        this.messageHandler = messageHandler;
+        this.messageService = messageService;
     }
 
-    public void onData(SocketIOClient socketIOClient, Message message, AckRequest ackRequest) throws Exception {
+    @Override
+    public void onData(SocketIOClient socketIOClient, byte[] message, AckRequest ackRequest) throws Exception {
         log.info("onData...");
-        messageHandler.handler(message);
+
+
         UUID sessionId = socketIOClient.getSessionId();
         log.info("current client: [{}]", sessionId);
         SocketIONamespace namespace = socketIOClient.getNamespace();
@@ -54,6 +58,7 @@ public class MessageListener {
      *
      * @param socketIOClient
      */
+    @Override
     public void onDisconnect(SocketIOClient socketIOClient) {
         log.info("onDisconnect...");
         UUID sessionId = socketIOClient.getSessionId();
@@ -64,7 +69,6 @@ public class MessageListener {
         String room = handshakeData.getSingleUrlParam("room");
         log.info("current namespace:{}, room: {}", namespace.getName(), room);
         socketIOClient.disconnect();
-        cache.invalidate(sessionId);
     }
 
     /**
@@ -72,19 +76,24 @@ public class MessageListener {
      *
      * @param socketIOClient
      */
+    @Override
     public void onConnect(SocketIOClient socketIOClient) {
-        log.info("onConnect...");
         UUID sessionId = socketIOClient.getSessionId();
-        log.info("onConnect, client: {}", sessionId);
         // 检查命名空间/房间是否存在
-
-        cache.put(sessionId, socketIOClient);
+        socketIOClient.joinRoom("");
         SocketIONamespace namespace = socketIOClient.getNamespace();
         HandshakeData handshakeData = socketIOClient.getHandshakeData();
-//        String room = handshakeData.getSingleUrlParam("room");
-        String userId = handshakeData.getSingleUrlParam("userId");
-//        log.info("current namespace:{}, room: {}", namespace.getName(), room);
-//        namespace.getBroadcastOperations().sendEvent(EventEnum.NOTICE.getCode(), userId);
-        channelService.joinRoom(namespace, userId);
+        boolean joined = channelService.joinChannel(sessionId, namespace, handshakeData);
+        if(joined){
+            socketIOClient.getNamespace()
+                    .getBroadcastOperations()
+                    .sendEvent(EventEnum.NOTICE.toString(), (Object) new  byte[0]);
+        }
+
+    }
+
+    @Override
+    public void onPing(SocketIOClient client) {
+
     }
 }

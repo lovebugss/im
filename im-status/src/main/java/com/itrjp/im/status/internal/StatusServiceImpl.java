@@ -2,8 +2,14 @@ package com.itrjp.im.status.internal;
 
 import com.itrjp.im.common.dto.OnlineOfflineDTO;
 import com.itrjp.im.common.dubbo.service.StatusService;
+import com.itrjp.im.status.service.RoomService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+//import org.apache.dubbo.config.annotation.DubboService;
 import org.apache.dubbo.config.annotation.DubboService;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -15,30 +21,39 @@ import java.util.concurrent.CompletableFuture;
  */
 @Slf4j
 @DubboService
+@Repository
+@RequiredArgsConstructor
 public class StatusServiceImpl implements StatusService {
+
+    private final RoomService roomService;
+
+
     @Override
-    public int getRoomUV(String roomId) {
+    public long getRoomUV(String roomId) {
         log.info("getRoomUV");
-        return 100;
+
+        return roomService.getRoomUV(roomId);
     }
 
     @Override
-    public int getRoomPV(String roomId) {
+    public long getRoomPV(String roomId) {
         log.info("getRoomPV");
-        return 100;
+        return  roomService.getRoomPV(roomId);
     }
 
     @Override
-    public void online(OnlineOfflineDTO data) {
+    public boolean online(OnlineOfflineDTO data) {
         log.info("online");
+
+        return roomService.online(data);
     }
 
     @Override
-    public CompletableFuture<Void> onlineAsync(OnlineOfflineDTO data) {
+    public CompletableFuture<Boolean> onlineAsync(OnlineOfflineDTO data) {
         // TODO 线程池
         return CompletableFuture.supplyAsync(() -> {
-            online(data);
-            return null;
+
+            return online(data);
         });
     }
 
@@ -46,6 +61,7 @@ public class StatusServiceImpl implements StatusService {
     @Override
     public void offline(OnlineOfflineDTO data) {
         log.info("offline");
+        roomService.offline(data);
     }
 
     @Override

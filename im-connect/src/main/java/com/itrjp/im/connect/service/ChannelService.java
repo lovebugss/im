@@ -1,6 +1,9 @@
 package com.itrjp.im.connect.service;
 
+import com.corundumstudio.socketio.HandshakeData;
 import com.corundumstudio.socketio.SocketIONamespace;
+
+import java.util.UUID;
 
 /**
  * TODO
@@ -13,4 +16,6 @@ public interface ChannelService {
      * 加入房间
      */
     void joinRoom(SocketIONamespace room, String userId);
+
+    boolean joinChannel(UUID sessionId, SocketIONamespace namespace, HandshakeData handshakeData);
 }
