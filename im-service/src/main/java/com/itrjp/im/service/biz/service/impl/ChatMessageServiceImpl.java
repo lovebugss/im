@@ -9,7 +9,7 @@ import com.itrjp.im.service.entity.Room;
 import com.itrjp.im.service.service.IRoomService;
 import com.itrjp.im.service.service.MQService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

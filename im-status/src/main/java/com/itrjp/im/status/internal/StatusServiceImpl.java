@@ -5,11 +5,7 @@ import com.itrjp.im.common.dubbo.service.StatusService;
 import com.itrjp.im.status.service.RoomService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-//import org.apache.dubbo.config.annotation.DubboService;
-import org.apache.dubbo.config.annotation.DubboService;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -20,7 +16,6 @@ import java.util.concurrent.CompletableFuture;
  * @date 2022/3/13 17:26
  */
 @Slf4j
-@DubboService
 @Repository
 @RequiredArgsConstructor
 public class StatusServiceImpl implements StatusService {
@@ -38,7 +33,7 @@ public class StatusServiceImpl implements StatusService {
     @Override
     public long getRoomPV(String roomId) {
         log.info("getRoomPV");
-        return  roomService.getRoomPV(roomId);
+        return roomService.getRoomPV(roomId);
     }
 
     @Override

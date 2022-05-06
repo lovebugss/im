@@ -15,7 +15,6 @@
         <module>im-api</module>
         <module>im-common</module>
         <module>im-core</module>
-        <module>im-gateway</module>
         <module>im-service</module>
         <module>im-connect</module>
         <module>im-connect-netty</module>
