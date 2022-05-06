@@ -7,7 +7,6 @@ import com.google.common.cache.CacheBuilder;
 import com.itrjp.im.common.dto.OnlineOfflineDTO;
 import com.itrjp.im.common.dubbo.service.StatusService;
 import com.itrjp.im.connect.service.ChannelService;
-import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +24,6 @@ import java.util.concurrent.CompletableFuture;
 public class ChannelServiceImpl implements ChannelService {
     private final Cache<String, SocketIONamespace> namespaceCache = CacheBuilder.newBuilder().build();
     private final KafkaTemplate<Integer, String> kafkaTemplate;
-    @DubboReference
     private StatusService statusService;
 
     public ChannelServiceImpl(KafkaTemplate<Integer, String> kafkaTemplate) {
